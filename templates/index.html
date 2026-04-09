@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Sentiment Core</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            background: black;
+            color: #00ffff;
+            text-align: center;
+            overflow: hidden;
+
+
+        confidenceText {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #00ffff;        }        }
+
+        /* GRID */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(#ff00ff22 1px, transparent 1px),
+                        linear-gradient(90deg, #00ffff22 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveGrid 8s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes moveGrid {
+            to { transform: translate(-50px, -50px); }
+        }
+
+        .container {
+            margin-top: 60px;
+        }
+
+        h1 {
+            font-size: 45px;
+            background: linear-gradient(90deg, #ff00ff, #00ffff, #00ffcc);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        input {
+            padding: 15px;
+            width: 340px;
+            border-radius: 10px;
+            border: 1px solid #00ffff;
+            background: transparent;
+            color: white;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 15px 25px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            color: black;
+            cursor: pointer;
+        }
+
+        .result {
+            margin-top: 30px;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .loading {
+            margin-top: 20px;
+            display: none;
+            font-size: 18px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0.3; }
+        }
+
+        .bar {
+            width: 300px;
+            height: 10px;
+            background: #222;
+            margin: 20px auto;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .fill {
+            height: 100%;
+            width: 0%;
+            background: #00ffcc;
+            transition: 1s;
+        }
+
+        .panel {
+            margin-top: 30px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .clock {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="clock" id="clock"></div>
+
+<div class="container">
+    <h1>  AI SENTIMENT CORE </h1>
+
+    <form method="POST" onsubmit="showLoading()">
+        <input type="text" name="text" placeholder="Enter signal..." required>
+        <br>
+        <button type="submit">Analyze </button>
+    </form>
+
+    <div class="loading" id="loading"> AI is thinking...</div>
+
+    <div id="result" class="result">
+        {{ result }}
+    <p  id="confidencetext">{{confidence}}%</p> 
+    </div>
+
+    <div class="bar">
+        <div id="confidenceBar" class="fill"></div>
+    </div>
+
+    <div class="panel">
+        <p> Neural Engine Active</p>
+        <p> Deep Learning Model Running</p>
+        <p> Signal Analysis in Progress</p>
+    </div>
+</div>
+
+<script>
+function showLoading() {
+    document.getElementById("loading").style.display = "block";
+}
+
+const result = document.getElementById("result").innerText;
+const bar = document.getElementById("confidenceBar");
+
+let confidence = parseFloat("{{ confidence if confidence else 0 }}");
+bar.style.width = confidence + "%";
+
+if (confidence === 0) {
+    document.getElementById("confidenceText").style.display = "none";
+}
+
+if (result.includes("Positive")) {
+    document.getElementById("result").style.color = "#00ff00";
+    bar.style.background = "#00ff00";
+     
+}
+else if (result.includes("Negative")) {
+    document.getElementById("result").style.color = "#ff0033";
+    bar.style.background = "#ff0033";
+     
+}
+else if (result.includes("Neutral")) {
+    document.getElementById("result").style.color = "#ffff00";
+    bar.style.background = "#ffff00";
+     
+}
+
+/* CLOCK */
+function updateClock() {
+    const now = new Date();
+    document.getElementById("clock").innerText =
+        now.toLocaleTimeString();
+}
+setInterval(updateClock, 1000);
+</script>
+
+</body>
+</html>
